@@ -45,8 +45,9 @@ class FileStorage():
         try:
             with open(FileStorage.__file_path, 'r', encoding="utf-8") as file:
                 "handle if file is empty"
-                if file.read():
-                    obj = json.loads(file.read())
+                file_content = file.read()
+                if file_content:
+                    obj = json.loads(file_content)
                     for key, value in obj.items():
                         FileStorage.__objects[key] = \
                             eval(value['__class__'])(**value)

@@ -14,6 +14,7 @@ public instance methods:
 
 from uuid import uuid4
 from datetime import datetime
+import models
 
 
 class BaseModel:
@@ -47,6 +48,7 @@ class BaseModel:
         Update the updated_at attribute with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.save(self)
 
     def to_dict(self):
         """

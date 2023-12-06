@@ -42,7 +42,15 @@ class FileStorage():
         with assigning each
         obj to its key.
         """
-        with open(FileStorage.__file_path, 'r', encoding="utf-8") as file:
-            obj = json.loads(file.read())
-            for key, value in obj.keys():
-                FileStorage.__objects[key] = eval(value['__class__'])(**value)
+        try:
+            with open(FileStorage.__file_path, 'r', encoding="utf-8") as file:
+                "handle if file is empty"
+                if file.read():
+                    obj = json.loads(file.read())
+                    for key, value in obj.items():
+                        FileStorage.__objects[key] = \
+                            eval(value['__class__'])(**value)
+
+        except FileNotFoundError:
+            "handle when the file not exist"
+            pass

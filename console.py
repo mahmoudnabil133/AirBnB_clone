@@ -5,8 +5,13 @@ of the project where we can create, update, show, deleate opjects
 """
 import cmd
 from models.base_model import BaseModel
-from models import storage
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
 from models.user import User
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -32,19 +37,28 @@ class HBNBCommand(cmd.Cmd):
         (create) + <class_Name>
         """
         if line:
-            "parse line to separate class name in a touple"
+            "parse line to separate class name"
             parsed = cmd.Cmd.parseline(self, line)
-            class_name = parsed[0]
-            if class_name == "BaseModel":
+            class_name = parsed[0].lower()
+            if class_name == "basemodel":
                 new_obj = BaseModel()
-                new_obj.save()
-                print(new_obj.id)
-            elif class_name == "User":
+            elif class_name == "user":
                 new_obj = User()
-                new_obj.save()
-                print(new_obj.id)
+            elif class_name == "state":
+                new_obj = State()
+            elif class_name == "city":
+                new_obj = City()
+            elif class_name == "amenity":
+                new_obj = Amenity()
+            elif class_name == "place":
+                new_obj = Place()
+            elif class_name == "review":
+                new_obj = Review()
             else:
                 print("** class doesn't exist **")
+                return True
+            new_obj.save()
+            print(new_obj.id)
         else:
             print("** class name missing **")
         return True
@@ -58,11 +72,71 @@ class HBNBCommand(cmd.Cmd):
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
-            class_name = parsed[0]
+            class_name = parsed[0].lower()
             idn = parsed[1]
-            if class_name == "BaseModel":
+            if class_name == "basemodel":
                 if idn:
                     full_key = f"BaseModel.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "user":
+                if idn:
+                    full_key = f"User.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "state":
+                if idn:
+                    full_key = f"State.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "city":
+                if idn:
+                    full_key = f"City.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "amenity":
+                if idn:
+                    full_key = f"Amenity.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "place":
+                if idn:
+                    full_key = f"Place.{idn}"
+                    dic = storage.all()
+                    try:
+                        print(dic[full_key])
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "review":
+                if idn:
+                    full_key = f"Review.{idn}"
                     dic = storage.all()
                     try:
                         print(dic[full_key])
@@ -85,11 +159,77 @@ class HBNBCommand(cmd.Cmd):
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
-            class_name = parsed[0]
+            class_name = parsed[0].lower()
             idn = parsed[1]
-            if class_name == "BaseModel":
+            if class_name == "basemodel":
                 if idn:
                     full_key = f"BaseModel.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "user":
+                if idn:
+                    full_key = f"User.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "state":
+                if idn:
+                    full_key = f"State.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "city":
+                if idn:
+                    full_key = f"City.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "amenity":
+                if idn:
+                    full_key = f"Amenity.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "place":
+                if idn:
+                    full_key = f"Place.{idn}"
+                    dic = storage.all()
+                    try:
+                        del dic[full_key]
+                        storage.save()
+                    except KeyError:
+                        print("** no instance found **")
+                else:
+                    print("** instance id missing **")
+            elif class_name == "review":
+                if idn:
+                    full_key = f"Review.{idn}"
                     dic = storage.all()
                     try:
                         del dic[full_key]
@@ -113,83 +253,254 @@ class HBNBCommand(cmd.Cmd):
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
-            class_name = parsed[0]
-            if class_name == "BaseModel":
+            class_name = parsed[0].lower()
+            if class_name == "basemodel":
                 dic = storage.all()
                 for key, value in dic.items():
-                    print(value)
+                    if key.split(".")[0] == "BaseModel":
+                        print(value)
+            elif class_name == "user":
+                dic = storage.all()
+                for key, value in dic.items():
+                    if key.split(".")[0] == "User":
+                        print(value)
+            elif class_name == "state":
+                dic = storage.all()
+                for key, value in dic.items():
+                    if key.split(".")[0] == "State":
+                        print(value)
+            elif class_name == "city":
+                dic = storage.all()
+                for key, value in dic.items():
+                    if key.split(".")[0] == "City":
+                        print(value)
+            elif class_name == "amenity":
+                dic = storage.all()
+                for key, value in dic.items():
+                    if key.split(".")[0] == "Amenity":
+                        print(value)
+            elif class_name == "place":
+                dic = storage.all()
+                for key, value in dic.items():
+                    if key.split(".")[0] == "Place":
+                        print(value)
             else:
                 print("** class doesn't exist **")
+                return
         else:
             dic = storage.all()
             for key, value in dic.items():
                 print(value)
-        return True
 
     def do_update(self, line):
         """
-        used to update objects by its id
-        the command should be like that:
-        (update) <class_Name>  <obj_id>  <attribute_name> "<attribute value>"
-        if user put more attributes and its values we will ignore.
+        used to update object by its id
+        command should be like that:
+        (update) + <class_Name> + <obj_id> + <attribute_name> + <attribute_value>
         """
         if line:
-            """
-            parse to get <class_name> and the others
-            (others)--> is  <obj_id> + <attribute_name> + "<attribute value>"
-            """
-            parsed_1 = cmd.Cmd.parseline(self, line)
-            class_name = parsed_1[0]
-            others = parsed_1[1]
-            if class_name == "BaseModel":
-                if others:
-                    """
-                    to optain <obj_id> we will take first 35 char of others
-                    as you know id contains 32 (char) with 3 (-)
-                    """
-                    id = others[:36]
-                    full_key = f"BaseModel.{id}"
-                    "handle if object found or not"
+            "parse line to separate class name and id in a touple"
+            parsed = cmd.Cmd.parseline(self, line)
+            class_name = parsed[0].lower()
+            idn = parsed[1]
+            if class_name == "basemodel":
+                if idn:
+                    full_key = f"BaseModel.{idn}"
+                    dic = storage.all()
                     try:
-                        dic = storage.all()
                         obj = dic[full_key]
                     except KeyError:
                         print("** no instance found **")
-                    """
-                    after we optained <obj_id> from others
-                    the remain will be <attr_name> <attr_value> (and me be
-                    other attributees but we will ignore them)"
-                    """
-                    key_val_others = others[36:]
-                    'parse remain to optain <key> and "<value>"'
-                    parsing_touples = cmd.Cmd.parseline(self, key_val_others)
-                    key = parsing_touples[0]
-                    if key:
-                        value_others = parsing_touples[1]
-                        'to avoid parsing character (") we will ignore it'
-                        val_oth2 = value_others[1:]
-                        """
-                        step below to aptain just a value as we may have other
-                        attributes so we will parse remaining
-                        and take just a value
-                        """
-                        pars2 = cmd.Cmd.parseline(self, val_oth2)
-                        value = pars2[0]
-                        if value:
-                            """now we have obj and <key>, <val>
-                            --> setattr and save to json file"""
-                            setattr(obj, key, value)
-                            obj.save()
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
                         else:
-                            print("** value missing **")
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
                     else:
-                        print("** attribute name missing **")
+                        print("** value missing **")
+                        return
                 else:
                     print("** instance id missing **")
+                    return
+            elif class_name == "user":
+                if idn:
+                    full_key = f"User.{idn}"
+                    dic = storage.all()
+                    try:
+                        obj = dic[full_key]
+                    except KeyError:
+                        print("** no instance found **")
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
+                    else:
+                        print("** value missing **")
+                        return
+                else:
+                    print("** instance id missing **")
+                    return
+            elif class_name == "state":
+                if idn:
+                    full_key = f"State.{idn}"
+                    dic = storage.all()
+                    try:
+                        obj = dic[full_key]
+                    except KeyError:
+                        print("** no instance found **")
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
+                    else:
+                        print("** value missing **")
+                        return
+                else:
+                    print("** instance id missing **")
+                    return
+            elif class_name == "city":
+                if idn:
+                    full_key = f"City.{idn}"
+                    dic = storage.all()
+                    try:
+                        obj = dic[full_key]
+                    except KeyError:
+                        print("** no instance found **")
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
+                    else:
+                        print("** value missing **")
+                        return
+                else:
+                    print("** instance id missing **")
+                    return
+            elif class_name == "amenity":
+                if idn:
+                    full_key = f"Amenity.{idn}"
+                    dic = storage.all()
+                    try:
+                        obj = dic[full_key]
+                    except KeyError:
+                        print("** no instance found **")
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
+                    else:
+                        print("** value missing **")
+                        return
+                else:
+                    print("** instance id missing **")
+                    return
+            elif class_name == "place":
+                if idn:
+                    full_key = f"Place.{idn}"
+                    dic = storage.all()
+                    try:
+                        obj = dic[full_key]
+                    except KeyError:
+                        print("** no instance found **")
+                        return
+                    if len(parsed) == 4:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                    elif len(parsed) == 5:
+                        if parsed[2] == "created_at":
+                            obj.created_at = parsed[3]
+                        elif parsed[2] == "updated_at":
+                            obj.updated_at = parsed[3]
+                        else:
+                            print("** attribute name missing **")
+                            return
+                        obj.save()
+                    else:
+                        print("** value missing **")
+                        return
+                else:
+                    print("** instance id missing **")
+                    return
             else:
                 print("** class doesn't exist **")
+                return
         else:
             print("** class name missing **")
+            return
 
 
 if __name__ == "__main__":

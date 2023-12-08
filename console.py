@@ -6,6 +6,7 @@ of the project where we can create, update, show, deleate opjects
 import cmd
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
@@ -26,23 +27,31 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         """
-        used to create a new obj then save it to file
-        command should be like that:
+        used to create new object
+        the command should be like that:
         (create) + <class_Name>
         """
         if line:
-            if line == "BaseModel":
-                obj = BaseModel()
-                print(obj.id)
-                obj.save()
+            "parse line to separate class name in a touple"
+            parsed = cmd.Cmd.parseline(self, line)
+            class_name = parsed[0]
+            if class_name == "BaseModel":
+                new_obj = BaseModel()
+                new_obj.save()
+                print(new_obj.id)
+            elif class_name == "User":
+                new_obj = User()
+                new_obj.save()
+                print(new_obj.id)
             else:
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+        return True
 
     def do_show(self, line):
         """
-        used to show str reprsentation of obj by its id
+        used to show object by its id
         command should be like that:
         (show) + <class_Name> + <obj_id>
         """
@@ -53,78 +62,69 @@ class HBNBCommand(cmd.Cmd):
             idn = parsed[1]
             if class_name == "BaseModel":
                 if idn:
-                    full_key = f'BaseModel.{idn}'
+                    full_key = f"BaseModel.{idn}"
                     dic = storage.all()
                     try:
                         print(dic[full_key])
                     except KeyError:
-                        print('** no instance found **')
+                        print("** no instance found **")
                 else:
-                    print('** instance id missing **')
+                    print("** instance id missing **")
             else:
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+        return True
 
     def do_destroy(self, line):
         """
-        used to destroy object by its id
-        then remove it from json file
-        the command should be like that:
+        used to delete object by its id
+        command should be like that:
         (destroy) + <class_Name> + <obj_id>
         """
         if line:
-            "parse line to get class_name and id"
+            "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
             class_name = parsed[0]
             idn = parsed[1]
             if class_name == "BaseModel":
                 if idn:
-                    full_key = f'BaseModel.{idn}'
+                    full_key = f"BaseModel.{idn}"
                     dic = storage.all()
                     try:
-                        """
-                        (How we save changes in file)
-                        if you delete obj from var (dic)
-                        you are actually deleeting it from __objects dictionary
-                        (a private class Attr for FileStorage class)
-                        as it points to the same dictionary obj.
-                        then when you save a storage you are
-                        looping __objects dict and save objects to the file
-                        """
-                        del (dic[full_key])
+                        del dic[full_key]
                         storage.save()
                     except KeyError:
-                        print('** no instance found **')
+                        print("** no instance found **")
                 else:
-                    print('** instance id missing **')
+                    print("** instance id missing **")
             else:
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+        return True
 
     def do_all(self, line):
         """
-        used to print str repr of objects of specific class
-        or prnit all objects of all classes in storage
+        used to show all objects
         command should be like that:
-        (all) + <class_Name> ---> print objects of specific class
-        or
-        (all) -----> print all objs in the storage
+        (all) + <class_Name>
         """
-        dic = storage.all()
         if line:
-            if line == 'BaseModel':
-                for value in dic.values():
-                    dic_value = value.to_dict()
-                    if dic_value['__class__'] == 'BaseModel':
-                        print(value)
+            "parse line to separate class name and id in a touple"
+            parsed = cmd.Cmd.parseline(self, line)
+            class_name = parsed[0]
+            if class_name == "BaseModel":
+                dic = storage.all()
+                for key, value in dic.items():
+                    print(value)
             else:
                 print("** class doesn't exist **")
-
         else:
-            for value in dic.values():
+            dic = storage.all()
+            for key, value in dic.items():
                 print(value)
+        return True
 
     def do_update(self, line):
         """
@@ -161,12 +161,12 @@ class HBNBCommand(cmd.Cmd):
                     other attributees but we will ignore them)"
                     """
                     key_val_others = others[36:]
-                    "parse remain to optain <key> and \"<value>\""
+                    'parse remain to optain <key> and "<value>"'
                     parsing_touples = cmd.Cmd.parseline(self, key_val_others)
                     key = parsing_touples[0]
                     if key:
                         value_others = parsing_touples[1]
-                        "to avoid parsing character (\") we will ignore it"
+                        'to avoid parsing character (") we will ignore it'
                         val_oth2 = value_others[1:]
                         """
                         step below to aptain just a value as we may have other
@@ -192,5 +192,5 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     HBNBCommand().cmdloop()

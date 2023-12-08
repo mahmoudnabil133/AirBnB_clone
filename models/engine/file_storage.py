@@ -1,12 +1,20 @@
 #!/bin/bash/python3
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 import json
+import os
+
 """
 serialization and deserialization module
 """
 
 
-class FileStorage():
+class FileStorage:
     "container of serialization deserializtion methods"
     __file_path = "file.json"
     __objects = {}
@@ -16,8 +24,9 @@ class FileStorage():
         return FileStorage.__objects
 
     def new(self, obj):
-        "sets obj as a value of key --> class_name.id "
-        FileStorage.__objects[f"{obj.__class__.__name__}.{obj.id}"] = obj
+        "sets obj as a value of key --> class_name.id"
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """
@@ -26,12 +35,10 @@ class FileStorage():
         into dictionary ds by method to_dict from BaseModel class
         """
         dic = {}
-        for key, value in FileStorage.__objects.items():
-            dic[key] = value.to_dict()
-
-        "now dic{} is ready to be dumped then stored to json file"
         with open(FileStorage.__file_path, "w", encoding="utf-8") as file:
-            file.write(json.dumps(dic))
+            for key, value in FileStorage.__objects.items():
+                dic[key] = value.to_dict()
+            json.dump(dic, file)
 
     def reload(self):
         """
@@ -43,15 +50,16 @@ class FileStorage():
         obj to its key.
         """
         try:
-            with open(FileStorage.__file_path, 'r', encoding="utf-8") as file:
-                "handle if file is empty"
-                file_content = file.read()
-                if file_content:
-                    obj = json.loads(file_content)
-                    for key, value in obj.items():
-                        FileStorage.__objects[key] = \
-                            eval(value['__class__'])(**value)
-
+            with open(FileStorage.__file_path, "r", encoding="utf-8") as file:
+                dic = json.load(file)
+                for key, value in dic.items():
+                    obj = eval(value["__class__"])(**value)
+                    FileStorage.__objects[key] = obj
         except FileNotFoundError:
-            "handle when the file not exist"
             pass
+        except Exception as e:
+            print(e)
+            pass
+        finally:
+            pass
+        pass

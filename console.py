@@ -56,12 +56,11 @@ class HBNBCommand(cmd.Cmd):
                 new_obj = Review()
             else:
                 print("** class doesn't exist **")
-                return True
+                return
             new_obj.save()
             print(new_obj.id)
         else:
             print("** class name missing **")
-        return True
 
     def do_show(self, line):
         """
@@ -148,7 +147,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-        return True
 
     def do_destroy(self, line):
         """
@@ -242,7 +240,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-        return True
 
     def do_all(self, line):
         """

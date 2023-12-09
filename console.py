@@ -125,11 +125,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
 
     def do_show(self, line):
-        """
-        used to show object by its id
-        command should be like that:
-        (show) + <class_Name> + <obj_id>
-        """
+        
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
@@ -152,7 +148,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
 
     def do_destroy(self, line):
-        
+        """
+        used to delete object by its id
+        command should be like that:
+        (destroy) + <class_Name> + <obj_id>
+        """
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)

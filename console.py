@@ -13,16 +13,8 @@ from models.state import State
 from models.user import User
 from models import storage
 
-classes_list = [
-    "BaseModel",
-    "User",
-    "City",
-    "Place",
-    "State",
-    "Amenity",
-    "Review",
-]
-
+classes_list = ['BaseModel', 'User', 'City', 'Place',\
+               'State', 'Amenity', 'Review']
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
@@ -171,12 +163,12 @@ class HBNBCommand(cmd.Cmd):
                     other attributees but we will ignore them)"
                     """
                     key_val_others = others[36:]
-                    'parse remain to optain <key> and "<value>"'
+                    "parse remain to optain <key> and \"<value>\""
                     parsing_touples = cmd.Cmd.parseline(self, key_val_others)
                     key = parsing_touples[0]
                     if key:
                         value_others = parsing_touples[1]
-                        'to avoid parsing character (") we will ignore it'
+                        "to avoid parsing character (\") we will ignore it"
                         val_oth2 = value_others[1:]
                         """
                         step below to aptain just a value as we may have other
@@ -200,7 +192,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

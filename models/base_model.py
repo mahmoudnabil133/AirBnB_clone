@@ -39,26 +39,22 @@ class BaseModel:
 
     def __str__(self):
         """
-        Return the string representation of the BaseModel class
+        Print the string representation of the BaseModel class
         """
-        return "[{}] ({}) {}".format(
-            self.__class__.__name__,
-            self.id,
-            self.__dict__,
-        )
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         """
-        Update the public instance
-        attribute updated_at with the current datetime
+        Update the updated_at attribute with the current datetime
         """
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
         """
-        Return a dictionary containing
-        all keys/values of __dict__ of the instance
+        Return a dictionary containing all keys/values of
+        s__dict__ of the instance
         """
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = self.__class__.__name__

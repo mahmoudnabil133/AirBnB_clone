@@ -24,37 +24,44 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """
-        Initialize the BaseModel class
+        Initializes the BaseModel instance
         """
         if kwargs:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
-                    value = datetime.fromisoformat(value)
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
+        return None
 
     def __str__(self):
         """
-        Print the string representation of the BaseModel class
+        Prints the string representation of the BaseModel
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return "[{}] ({}) {}".format(
+            self.__class__.__name__,
+            self.id,
+            self.__dict__,
+        )
 
     def save(self):
         """
-        Update the updated_at attribute with the current datetime
+        Update the public instance attribute updated_at
+        with the current datetime
         """
         self.updated_at = datetime.now()
-        models.storage.new(self)
         models.storage.save()
+        return self.updated_at
 
     def to_dict(self):
         """
-        Return a dictionary containing all keys/values of
-        s__dict__ of the instance
+        Returns a dictionary containing all
+        keys/values of __dict__ of the instance
         """
         my_dict = self.__dict__.copy()
         my_dict["__class__"] = self.__class__.__name__

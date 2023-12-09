@@ -7,7 +7,6 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 import json
-import os
 
 """
 serialization and deserialization module
@@ -20,19 +19,22 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        "return a private class attribute __objects"
+        "returns the dictionary __objects"
         return FileStorage.__objects
 
     def new(self, obj):
-        "sets obj as a value of key --> class_name.id"
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        FileStorage.__objects[key] = obj
+        "sets in __objects the obj with key <obj class name>.id"
+        FileStorage.__objects[
+            "{}.{}".format(
+                obj.__class__.__name__,
+                obj.id,
+            )
+        ] = obj
 
     def save(self):
         """
-        method of serialization ,before that we will
-        convert the objects --> (wich are values of __objects dictionary)
-        into dictionary ds by method to_dict from BaseModel class
+        method for serializing dictionary __objects to json string
+        and save it to a file
         """
         dic = {}
         with open(FileStorage.__file_path, "w", encoding="utf-8") as file:
@@ -42,24 +44,12 @@ class FileStorage:
 
     def reload(self):
         """
-        method for deserializing json string to dictionary
-        dataStructure after that convert a dict into a obj by creating
-        instance from the parent class,
-        finally update the private class attribute __objects
-        with assigning each
-        obj to its key.
+        method for deserializing json string to dictionary __objects
         """
         try:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as file:
-                dic = json.load(file)
+                dic = json.loads(file.read())
                 for key, value in dic.items():
-                    obj = eval(value["__class__"])(**value)
-                    FileStorage.__objects[key] = obj
+                    self.new(eval(value["__class__"])(**value))
         except FileNotFoundError:
             pass
-        except Exception as e:
-            print(e)
-            pass
-        finally:
-            pass
-        pass

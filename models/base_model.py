@@ -28,16 +28,17 @@ class BaseModel:
         """
         if kwargs:
             for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
+                if key in ("updated_at", "created_at"):
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "__class__":
-                    setattr(self, key, value)
+                elif key[0] == "id":
+                    self.__dict__[key] = str(value)
+                else:
+                    self.__dict__[key] = value
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
-        return None
 
     def __str__(self):
         """
@@ -56,15 +57,17 @@ class BaseModel:
         """
         self.updated_at = datetime.now()
         models.storage.save()
-        return self.updated_at
 
     def to_dict(self):
         """
         Returns a dictionary containing all
         keys/values of __dict__ of the instance
         """
-        my_dict = self.__dict__.copy()
-        my_dict["__class__"] = self.__class__.__name__
-        my_dict["created_at"] = self.created_at.isoformat()
-        my_dict["updated_at"] = self.updated_at.isoformat()
-        return my_dict
+        map = {}
+        for key, value in self.__dict__.items():
+            if key in ("created_at", "updated_at"):
+                map[key] = value.isoformat()
+            else:
+                map[key] = value
+            map["__class__"] = self.__class__.__name__
+            return map

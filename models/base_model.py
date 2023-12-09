@@ -39,28 +39,27 @@ class BaseModel:
 
     def __str__(self):
         """
-        Print the string representation of the BaseModel class
+        Return the string representation of the BaseModel class
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return "[{}] ({}) {}".format(
+            self.__class__.__name__,
+            self.id,
+            self.__dict__,
+        )
 
     def save(self):
         """
-        Update the updated_at attribute with the current datetime
+        Update the public instance attribute updated_at with the current datetime
         """
         self.updated_at = datetime.now()
-        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
         """
-        Return a dictionary containing all keys/values of
-        s__dict__ of the instance
+        Return a dictionary containing all keys/values of __dict__ of the instance
         """
-        map = {}
-        for key, value in self.__dict__.items():
-            if key in ("created_at", "updated_at"):
-                map[key] = value.isoformat()
-            else:
-                map[key] = value
-            map["__class__"] = self.__class__.__name__
-            return map
+        my_dict = self.__dict__.copy()
+        my_dict["__class__"] = self.__class__.__name__
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        return my_dict

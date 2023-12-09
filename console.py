@@ -40,6 +40,70 @@ class HBNBCommand(cmd.Cmd):
         "to do nothing if user intered empty line"
         pass
 
+    def precmd(self, line):
+        """
+        do some changes on the line to prepare it to be excuted
+        input line will be like that:
+        User.show(<id>),
+        User.update(<id>, "attr_name", "attr_value")
+        output is supposed to be like that:
+        show User <id>,
+        update User <id> attr_name "attr_value"
+        """
+        id = ''
+        list_attrs = []
+        attr_name = ''
+        attr_value = ''
+        "handle if line contains ."
+        if '.' in line:
+            parse_line = line.split('.')
+            "separate command from class_name"
+            class_name = parse_line[0]
+            big_comand = parse_line[1]
+            "command is unsparated from () so we will separate them"
+            "handle if the user put parenthese or not"
+            if '(' in big_comand:
+                list_command_attributes = big_comand.split('(')
+                command = list_command_attributes[0]
+                attrs_R_parenthese = list_command_attributes[1]
+                "handle if user put command without right parenthese )"
+                if not attrs_R_parenthese:
+                    return cmd.Cmd.precmd(self, line)
+                attrs = attrs_R_parenthese.split(')')[0]
+                "now we have all attributes without parentheses"
+                """and if user didn't put attrs-->\
+                    remaining = '' , line = comand + class_name"""
+                if attrs:
+                    list_attrs.append(attrs)
+                    if ',' in attrs:
+                        list_attrs = attrs.split(',')
+                    "now we have all attributes separated in (list_attr)"
+                    id = list_attrs[0]
+                    "optain id without \""
+                    if "\"" in list_attrs[0]:
+                        id = list_attrs[0].split('\"')[-2]
+                    "handle update attributes"
+                    if len(list_attrs) > 1:
+                        "you are in update"
+                        attr_name = list_attrs[1]
+                        "optain attr_name without \""
+                        if "\"" in attr_name:
+                            attr_name = attr_name.split("\"")[-2]
+                        if len(list_attrs) > 2:
+                            attr_value = list_attrs[2]
+                            attr_value = attr_value.split(' ')[-1]
+                """
+                now we have attributes wich user intered in the console
+                and the other attributes is empty string.
+                """
+                attributes = id + ' ' + attr_name + ' ' + attr_value
+
+                line = command + ' ' + class_name + ' ' + attributes
+            else:
+                return cmd.Cmd.precmd(self, line)
+
+        return cmd.Cmd.precmd(self, line)
+
     def do_create(self, line):
         """
         used to create new object
@@ -79,6 +143,7 @@ class HBNBCommand(cmd.Cmd):
                         print(dic[full_key])
                     except KeyError:
                         print("** no instance found **")
+                        return
                 else:
                     print("** instance id missing **")
             else:
@@ -106,6 +171,7 @@ class HBNBCommand(cmd.Cmd):
                         storage.save()
                     except KeyError:
                         print("** no instance found **")
+                        return
                 else:
                     print("** instance id missing **")
             else:
@@ -122,7 +188,7 @@ class HBNBCommand(cmd.Cmd):
         if line:
             "parse line to separate class name and id in a touple"
             parsed = cmd.Cmd.parseline(self, line)
-            class_name = parsed[0].lower()
+            class_name = parsed[0]
             if class_name in classes_list:
                 dic = storage.all()
                 for key, value in dic.items():
@@ -153,11 +219,19 @@ class HBNBCommand(cmd.Cmd):
             others = parsed_1[1]
             if class_name in classes_list:
                 if others:
-                    """
-                    to optain <obj_id> we will take first 35 char of others
-                    as you know id contains 32 (char) with 3 (-)
-                    """
-                    id = others[:36]
+                    splited_attrs = others.split(' ')
+                    update_attrs = []
+                    "to remove empty string from splited_attrs"
+                    for val in splited_attrs:
+                        if val:
+                            update_attrs.append(val)
+                    id = update_attrs[0]
+                    key = ''
+                    value = ''
+                    if len(update_attrs) > 1:
+                        key = update_attrs[1]
+                        if len(update_attrs) > 2:
+                            value = update_attrs[2]
                     full_key = f"{class_name}.{id}"
                     "handle if object found or not"
                     try:
@@ -165,29 +239,13 @@ class HBNBCommand(cmd.Cmd):
                         obj = dic[full_key]
                     except KeyError:
                         print("** no instance found **")
-                    """
-                    after we optained <obj_id> from others
-                    the remain will be <attr_name> <attr_value> (and me be
-                    other attributees but we will ignore them)"
-                    """
-                    key_val_others = others[36:]
-                    'parse remain to optain <key> and "<value>"'
-                    parsing_touples = cmd.Cmd.parseline(self, key_val_others)
-                    key = parsing_touples[0]
+                        return
                     if key:
-                        value_others = parsing_touples[1]
-                        'to avoid parsing character (") we will ignore it'
-                        val_oth2 = value_others[1:]
-                        """
-                        step below to aptain just a value as we may have other
-                        attributes so we will parse remaining
-                        and take just a value
-                        """
-                        pars2 = cmd.Cmd.parseline(self, val_oth2)
-                        value = pars2[0]
                         if value:
                             """now we have obj and <key>, <val>
                             --> setattr and save to json file"""
+                            if "\"" in value:
+                                value = value.split('\"')[1]
                             setattr(obj, key, value)
                             obj.save()
                         else:
@@ -200,6 +258,31 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+
+    def do_count(self, line):
+        """
+        used to show all objects
+        command should be like that:
+        (all) + <class_Name>
+        """
+        if line:
+            "parse line to separate class name and id in a touple"
+            parsed = cmd.Cmd.parseline(self, line)
+            class_name = parsed[0]
+            if class_name in classes_list:
+                dic = storage.all()
+                count = 0
+                for key, value in dic.items():
+                    if key.split(".")[0] == class_name:
+                        count += 1
+                print(count)
+            else:
+                print("** class doesn't exist **")
+                return
+        else:
+            dic = storage.all()
+            for key, value in dic.items():
+                print(value)
 
 
 if __name__ == "__main__":

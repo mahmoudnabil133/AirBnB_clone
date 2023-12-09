@@ -41,15 +41,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def precmd(self, line):
-        """
-        do some changes on the line to prepare it to be excuted
-        input line will be like that:
-        User.show(<id>),
-        User.update(<id>, "attr_name", "attr_value")
-        output is supposed to be like that:
-        show User <id>,
-        update User <id> attr_name "attr_value"
-        """
+       
         id = ''
         list_attrs = []
         attr_name = ''
@@ -105,7 +97,11 @@ class HBNBCommand(cmd.Cmd):
         return cmd.Cmd.precmd(self, line)
 
     def do_create(self, line):
-       
+        """
+        used to create new object
+        the command should be like that:
+        (create) + <class_Name>
+        """
         if line:
             "parse line to separate class name"
             parsed = cmd.Cmd.parseline(self, line)

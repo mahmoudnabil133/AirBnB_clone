@@ -203,12 +203,7 @@ class HBNBCommand(cmd.Cmd):
                 print(value)
 
     def do_update(self, line):
-        """
-        used to update objects by its id
-        the command should be like that:
-        (update) <class_Name>  <obj_id>  <attribute_name> "<attribute value>"
-        if user put more attributes and its values we will ignore.
-        """
+        
         if line:
             """
             parse to get <class_name> and the others

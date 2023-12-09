@@ -82,6 +82,17 @@ class HBNBCommand(cmd.Cmd):
                     "optain id without \""
                     if "\"" in list_attrs[0]:
                         id = list_attrs[0].split('\"')[-2]
+                    """
+                    handle if user entered a dictionary and we will use
+                    $ as a indicator to a dictionary
+                    (to split with in create function)
+                    """
+                    if '{' in attrs:
+                        attr_value = (attrs.split('{')[1]).split('}')[-2]
+                        dic_value = '{' + attr_value + '}'
+                        line = command + ' ' + class_name\
+                            + ' ' + id + ' $' + dic_value
+                        return cmd.Cmd.precmd(self, line)
                     "handle update attributes"
                     if len(list_attrs) > 1:
                         "you are in update"
@@ -92,6 +103,7 @@ class HBNBCommand(cmd.Cmd):
                         if len(list_attrs) > 2:
                             attr_value = list_attrs[2]
                             attr_value = attr_value.split(' ')[-1]
+
                 """
                 now we have attributes wich user intered in the console
                 and the other attributes is empty string.
@@ -240,12 +252,25 @@ class HBNBCommand(cmd.Cmd):
                     except KeyError:
                         print("** no instance found **")
                         return
+                    "handle if user entered a dictionary"
+                    if '$' in others:
+                        str_dic_val = others.split('$')[1]
+                        dic_val = eval(str_dic_val)
+                        for k_dic, v_dic in dic_val.items():
+                            setattr(obj, k_dic, v_dic)
+                        obj.save()
+                        return
                     if key:
                         if value:
                             """now we have obj and <key>, <val>
                             --> setattr and save to json file"""
+                            "handle type of the value"
                             if "\"" in value:
                                 value = value.split('\"')[1]
+                            elif '.' in value:
+                                value = float(value)
+                            else:
+                                value = int(value)
                             setattr(obj, key, value)
                             obj.save()
                         else:

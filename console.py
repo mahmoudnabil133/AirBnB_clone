@@ -27,20 +27,20 @@ classes_list = [
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
-    def do_EOF(self, line):
+    def f_EOF(self, line):
         "EOF command to exit program"
         print()
         return True
 
-    def do_quit(self, line):
+    def f_quit(self, line):
         "Quit command to exit the program"
         return True
 
-    def emptyline(self):
+    def f_emptyLine(self):
         "to do nothing if user intered empty line"
         pass
 
-    def precmd(self, line):
+    def f_preCmd(self, line):
         """
         do some changes on the line to prepare it to be excuted
         input line will be like that:
@@ -116,7 +116,7 @@ class HBNBCommand(cmd.Cmd):
 
         return cmd.Cmd.precmd(self, line)
 
-    def do_create(self, line):
+    def f_create(self, line):
         """
         used to create new object
         the command should be like that:
@@ -136,7 +136,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_show(self, line):
+    def f_show(self, line):
         """
         used to show object by its id
         command should be like that:
@@ -163,7 +163,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_destroy(self, line):
+    def f_destroy(self, line):
         """
         used to delete object by its id
         command should be like that:
@@ -191,7 +191,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_all(self, line):
+    def f_showAll(self, line):
         """
         used to show all objects
         command should be like that:
@@ -214,7 +214,7 @@ class HBNBCommand(cmd.Cmd):
             for key, value in dic.items():
                 print(value)
 
-    def do_update(self, line):
+    def f_update(self, line):
         """
         used to update objects by its id
         the command should be like that:
@@ -284,7 +284,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_count(self, line):
+    def f_count(self, line):
         """
         used to show all objects
         command should be like that:

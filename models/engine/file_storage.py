@@ -48,8 +48,10 @@ class FileStorage:
         """
         try:
             with open(FileStorage.__file_path, "r", encoding="utf-8") as file:
-                dic = json.loads(file.read())
-                for key, value in dic.items():
-                    self.new(eval(value["__class__"])(**value))
+                content = file.read()
+                if content:
+                    dic = json.loads(content)
+                    for key, value in dic.items():
+                        self.new(eval(value["__class__"])(**value))
         except FileNotFoundError:
             pass

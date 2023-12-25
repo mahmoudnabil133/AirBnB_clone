@@ -58,3 +58,48 @@ div.container section.filters button:hover{
     font-size: 14px;
     margin-top: 2px;
 }
+
+.location .popover{
+    display: none;
+    background-color: #FAFAFA;
+    color: black;
+    width: 96%;
+    border: 1px solid #DDDDDD;
+    position: relative;
+    right: 30px;
+}
+.amenities .popover{
+    display: none;
+    background-color: #FAFAFA;
+    color: black;
+    width: 96%;
+    border: 1px solid #DDDDDD;
+    position: relative;
+    right: 30px;
+
+}
+
+.location:hover >.popover,
+.amenities:hover >.popover{
+    display: block;
+}
+
+.popover ul, .popover{
+    list-style-type: none;
+}
+.popover h2{
+    margin-top: 5;
+    margin-left: 5;
+}
+
+.location .popover > li{
+    margin-bottom: 30px;
+}
+.location .popover > li > ul{
+    padding-left: 20px;
+    padding-top: 0px;
+}
+
+.amenities .popover{
+    font-size: 14px;
+}
